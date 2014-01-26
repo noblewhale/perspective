@@ -472,4 +472,48 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void clickToVote(final View view)
+    {
+        Log.e(TAG, "Fucking worked");
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                HttpURLConnection connection;
+                OutputStreamWriter request = null;
+
+                AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+                Account[] list = manager.getAccounts();
+
+
+                System.setProperty("http.keepAlive", "false");
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost("http://noblewhale.com/picit/saveVote.php");
+
+
+
+                try {
+
+                    // Add your data
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("name", list[0].name));
+                    nameValuePairs.add(new BasicNameValuePair("imageID", imageViews.get((ImageView)view)));
+
+                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                    // Execute HTTP Post Request
+                    HttpResponse response = httpclient.execute(httppost);
+
+                    Log.e(TAG, response.toString());
+
+                } catch (ClientProtocolException e) {
+                    // TODO Auto-generated catch block
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                }
+
+                return "";
+            }
+        }.execute(null, null, null);
+    }
+
 }

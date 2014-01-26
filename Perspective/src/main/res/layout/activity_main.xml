@@ -35,7 +35,8 @@
         android:layout_gravity="left|bottom"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
+        android:layout_marginLeft="21dp"
+        android:onClick="clickToVote" />
 
     <ImageView
         android:layout_width="71dp"
