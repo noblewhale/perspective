@@ -88,6 +88,9 @@ public class MainActivity extends ActionBarActivity
 
     File imageFile;
     HashMap<ImageView, String> imageViews = new HashMap<ImageView, String>();
+    HashMap<String, TextView> textViews = new HashMap<String, TextView>();
+    TextView ownerTextView;
+    ArrayList<TextView> textViewList = new ArrayList<TextView>();
     ImageView thumbnailView;
     String regid;
 
@@ -105,9 +108,13 @@ public class MainActivity extends ActionBarActivity
         mDisplay = (TextView) findViewById(R.id.display);
 
         thumbnailView = (ImageView)findViewById(R.id.imageView);
+        ownerTextView = (TextView)findViewById(R.id.textView4);
         imageViews.put((ImageView)findViewById(R.id.imageView2), "");
         imageViews.put((ImageView)findViewById(R.id.imageView3), "");
         imageViews.put((ImageView)findViewById(R.id.imageView4), "");
+        textViewList.add((TextView)findViewById(R.id.textView));
+        textViewList.add((TextView)findViewById(R.id.textView2));
+        textViewList.add((TextView)findViewById(R.id.textView3));
 
         if(checkPlayServices())
         {
@@ -158,6 +165,8 @@ public class MainActivity extends ActionBarActivity
                 String imageID = intent.getStringExtra("imageID");
                 ImageView imageView = (ImageView) imageViews.keySet().toArray()[alreadyLoadedImageCount];
                 imageViews.put(imageView, imageID);
+                Log.e(TAG, textViewList.get(alreadyLoadedImageCount).getText().toString());
+                textViews.put(imageID, textViewList.get(alreadyLoadedImageCount));
                 alreadyLoadedImageCount++;
                 new DownloadImageTask(imageView).execute(url);
                 Log.e(TAG, url);
@@ -173,7 +182,16 @@ public class MainActivity extends ActionBarActivity
             if (intent.getAction().equals("VoteReceived"))
             {
                 Log.e(TAG, intent.getStringExtra("imageID"));
-
+                TextView theView = textViews.get(intent.getStringExtra("imageID"));
+                if(theView == null)
+                {
+                    // Vote was for your picture
+                    ownerTextView.get(intent.getStringExtra("imageID")).setText(Integer.toString(Integer.parseInt(ownerTextView.getText().toString())+1));
+                }
+                else
+                {
+                    textViews.get(intent.getStringExtra("imageID")).setText(Integer.toString(Integer.parseInt(theView.getText().toString())+1));
+                }
             }
         }
     }
