@@ -474,7 +474,7 @@ public class MainActivity extends ActionBarActivity
 
     public void clickToVote(final View view)
     {
-        Log.e(TAG, "Fucking worked");
+
         new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] params) {
