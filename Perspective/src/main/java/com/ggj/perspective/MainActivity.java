@@ -155,8 +155,7 @@ public class MainActivity extends ActionBarActivity
                 ImageView imageView = (ImageView) imageViews.keySet().toArray()[alreadyLoadedImageCount];
                 imageViews.put(imageView, imageID);
                 alreadyLoadedImageCount++;
-                Log.e(TAG, )
-                new DownloadImageTask(thumbnailView).execute(url);
+                new DownloadImageTask(imageView).execute(url);
                 Log.e(TAG, url);
             }
         }
