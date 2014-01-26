@@ -57,6 +57,8 @@
         android:layout_gravity="right|bottom"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
+        android:layout_marginLeft="21dp"
+        android:onClick="clickToVote"
+        android:clickable="true" />
 
 </FrameLayout>
