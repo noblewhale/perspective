@@ -7,52 +7,85 @@
     tools:ignore="MergeRootFrame" >
     <TextView
         android:id="@+id/display"
-        android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:layout_width="137dp"
+        android:layout_height="126dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center_horizontal|top"
+        android:minHeight="20dp"
+        android:minWidth="20dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pic It!"
         android:id="@+id/button"
-        android:layout_gravity="center"
+        android:layout_gravity="left|top"
         android:onClick="onTakePictureButtonPressed" />
 
     <ImageView
-        android:layout_width="71dp"
-        android:layout_height="65dp"
-        android:id="@+id/imageView"
-        android:layout_gravity="left|center_vertical"
-        android:minHeight="20dp"
-        android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
-
-    <ImageView
-        android:layout_width="71dp"
-        android:layout_height="65dp"
+        android:layout_width="fill_parent"
+        android:layout_height="110dp"
         android:id="@+id/imageView2"
-        android:layout_gravity="left|bottom"
+        android:layout_gravity="center"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
+        android:layout_marginBottom="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="1"
+        android:id="@+id/textView"
+        android:layout_gravity="left|center_vertical"
+        android:textSize="50dp"
+        android:layout_marginBottom="34dp"
+        android:layout_marginLeft="30dp" />
 
     <ImageView
-        android:layout_width="71dp"
-        android:layout_height="65dp"
+        android:layout_width="fill_parent"
+        android:layout_height="112dp"
         android:id="@+id/imageView3"
         android:layout_gravity="center_horizontal|bottom"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
+        android:layout_marginBottom="136dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="1"
+        android:id="@+id/textView2"
+        android:layout_gravity="left|center_vertical"
+        android:textSize="50dp"
+        android:layout_marginBottom="44dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="124dp" />
 
     <ImageView
-        android:layout_width="71dp"
-        android:layout_height="65dp"
+        android:layout_width="fill_parent"
+        android:layout_height="110dp"
         android:id="@+id/imageView4"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="center_horizontal|bottom"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="1"
+        android:id="@+id/textView3"
+        android:layout_gravity="left|bottom"
+        android:textSize="50dp"
+        android:layout_marginBottom="29dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="139dp" />
 
 </FrameLayout>

@@ -2,6 +2,7 @@
   <library name="ComAndroidSupportAppcompatV71900.aar">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/Perspective/build/exploded-bundles/ComAndroidSupportAppcompatV71900.aar/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Perspective/build/exploded-bundles/ComAndroidSupportAppcompatV71900.aar/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
