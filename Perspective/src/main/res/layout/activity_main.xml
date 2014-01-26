@@ -54,7 +54,7 @@
 
             <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="200dp"
+            android:layout_height="170dp"
             android:id="@+id/imageView2"
             android:layout_gravity="center_horizontal|bottom"
             android:minHeight="20dp"
@@ -80,7 +80,7 @@
 
             <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         android:id="@+id/imageView3"
         android:layout_gravity="center"
         android:minHeight="20dp"
@@ -107,7 +107,7 @@
 
             <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="170dp"
         android:id="@+id/imageView4"
         android:layout_gravity="center_horizontal|bottom"
         android:minHeight="20dp"
