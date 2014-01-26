@@ -10,4 +10,22 @@
         android:text="@string/hello_world"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pic It!"
+        android:id="@+id/button"
+        android:layout_gravity="center"
+        android:onClick="onTakePictureButtonPressed" />
+
+    <ImageView
+        android:layout_width="71dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="left|center_vertical"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:layout_marginLeft="21dp" />
+
 </FrameLayout>

@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
     <permission android:name="com.ggj.perspective.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.ggj.perspective.permission.C2D_MESSAGE" />
@@ -41,7 +43,8 @@
 
         <activity
             android:name="com.ggj.perspective.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:configChanges="orientation|screenSize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

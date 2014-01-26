@@ -3,19 +3,33 @@ package com.ggj.perspective;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.hardware.Camera;
+import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,10 +43,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -58,12 +76,17 @@ public class MainActivity extends ActionBarActivity
     String SENDER_ID = "173918856707";
 
     TextView mDisplay;
+    ImageView mImageView;
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
     SharedPreferences prefs;
     Context context;
 
+    File imageFile;
+
     String regid;
+
+    Bitmap thumbImage, fullsizeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,6 +96,7 @@ public class MainActivity extends ActionBarActivity
 
         context = this.getApplicationContext();
         mDisplay = (TextView) findViewById(R.id.display);
+        mImageView = (ImageView) findViewById(R.id.imageView);
 
         if(checkPlayServices())
         {
@@ -95,6 +119,64 @@ public class MainActivity extends ActionBarActivity
     {
         super.onResume();
         checkPlayServices();
+    }
+
+    public void onTakePictureButtonPressed(View view)
+    {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        imageFile = new File(Environment.getExternalStorageDirectory().getPath(),"temp85736583.jpg");
+        try {
+            imageFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Uri outputFileUri = Uri.fromFile(imageFile);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null)
+        {
+            startActivityForResult(takePictureIntent, 1);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == 1 && resultCode == RESULT_OK)
+        {
+            fullsizeImage = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            fullsizeImage = Bitmap.createScaledBitmap(fullsizeImage, fullsizeImage.getWidth()/2, fullsizeImage.getHeight()/2, true);
+            thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage, 100, 100);
+            mImageView.setImageBitmap(thumbImage);
+
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(imageFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+
+            Matrix matrix = new Matrix();
+            mImageView.setScaleType(ImageView.ScaleType.MATRIX);   //required
+            Rect imageBounds = mImageView.getDrawable().getBounds();
+
+            switch(orientation)
+            {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.postRotate((float) 90, imageBounds.width()/2, imageBounds.height()/2);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.postRotate((float) 180, imageBounds.width()/2, imageBounds.height()/2);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.postRotate((float) 270, imageBounds.width()/2, imageBounds.height()/2);
+                    break;
+            }
+
+            mImageView.setImageMatrix(matrix);
+
+            sendPhoto();
+        }
     }
 
     /**
@@ -212,6 +294,59 @@ public class MainActivity extends ActionBarActivity
             @Override
             protected void onPostExecute(Object msg) {
                 mDisplay.append(msg + "\n");
+            }
+        }.execute(null, null, null);
+    }
+
+    /**
+     * Sends the photo to a php script on our server that then sends it out to other players
+     */
+    private void sendPhoto()
+    {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                HttpURLConnection connection;
+                OutputStreamWriter request = null;
+
+                AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+                Account[] list = manager.getAccounts();
+
+                URL url = null;
+                String parameters = "name="+list[0].name;
+
+                System.setProperty("http.keepAlive", "false");
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost("http://noblewhale.com/picit/consumePhoto.php");
+
+                // Encode image as string to send to server
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                fullsizeImage.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+                byte[] b = baos.toByteArray();
+
+                String encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+                try {
+
+                    // Add your data
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("name", list[0].name));
+                    nameValuePairs.add(new BasicNameValuePair("image", encodedImage));
+
+                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                    // Execute HTTP Post Request
+                    HttpResponse response = httpclient.execute(httppost);
+
+                } catch (ClientProtocolException e) {
+                    // TODO Auto-generated catch block
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                }
+
+                Log.e(TAG, parameters);
+
+                return "";
             }
         }.execute(null, null, null);
     }
