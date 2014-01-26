@@ -186,7 +186,7 @@ public class MainActivity extends ActionBarActivity
                 if(theView == null)
                 {
                     // Vote was for your picture
-                    ownerTextView.get(intent.getStringExtra("imageID")).setText(Integer.toString(Integer.parseInt(ownerTextView.getText().toString())+1));
+                    ownerTextView.setText(Integer.toString(Integer.parseInt(ownerTextView.getText().toString())+1));
                 }
                 else
                 {
