@@ -59,7 +59,10 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends ActionBarActivity
@@ -78,17 +81,19 @@ public class MainActivity extends ActionBarActivity
     String SENDER_ID = "173918856707";
 
     TextView mDisplay;
-    ImageView mImageView;
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
     SharedPreferences prefs;
     Context context;
 
     File imageFile;
-
+    HashMap<ImageView, String> imageViews = new HashMap<ImageView, String>();
+    ImageView thumbnailView;
     String regid;
 
-    Bitmap thumbImage, fullsizeImage;
+    int alreadyLoadedImageCount = 0;
+
+    Bitmap fullsizeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,7 +103,11 @@ public class MainActivity extends ActionBarActivity
 
         context = this.getApplicationContext();
         mDisplay = (TextView) findViewById(R.id.display);
-        mImageView = (ImageView) findViewById(R.id.imageView);
+
+        thumbnailView = (ImageView)findViewById(R.id.imageView);
+        imageViews.put((ImageView)findViewById(R.id.imageView2), "");
+        imageViews.put((ImageView)findViewById(R.id.imageView3), "");
+        imageViews.put((ImageView)findViewById(R.id.imageView4), "");
 
         if(checkPlayServices())
         {
@@ -121,10 +130,10 @@ public class MainActivity extends ActionBarActivity
     {
         super.onResume();
         checkPlayServices();
-        this.registerReceiver(new PowerStatusReceiver(), new IntentFilter("UpdateImage"));
+        this.registerReceiver(new updateImage(), new IntentFilter("UpdateImage"));
     }
 
-    private final class PowerStatusReceiver extends BroadcastReceiver
+    private final class updateImage extends BroadcastReceiver
     {
         @Override
         public void onReceive(Context context, Intent intent)
@@ -132,7 +141,11 @@ public class MainActivity extends ActionBarActivity
             if (intent.getAction().equals("UpdateImage"))
             {
                 String url = intent.getStringExtra("url");
-                new DownloadImageTask((ImageView) findViewById(R.id.imageView2)).execute(url);
+                String imageID = intent.getStringExtra("imageID");
+                ImageView imageView = (ImageView) imageViews.keySet().toArray()[alreadyLoadedImageCount];
+                imageViews.put(imageView, imageID);
+                alreadyLoadedImageCount++;
+                new DownloadImageTask(imageView).execute(url);
                 Log.e(TAG, url);
             }
         }
@@ -162,8 +175,9 @@ public class MainActivity extends ActionBarActivity
         {
             fullsizeImage = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             fullsizeImage = Bitmap.createScaledBitmap(fullsizeImage, fullsizeImage.getWidth()/2, fullsizeImage.getHeight()/2, true);
-            thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage, 100, 100);
-            mImageView.setImageBitmap(thumbImage);
+            Bitmap thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage, 100, 100);
+
+            thumbnailView.setImageBitmap(thumbImage);
 
             ExifInterface exif = null;
             try {
@@ -174,8 +188,8 @@ public class MainActivity extends ActionBarActivity
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
             Matrix matrix = new Matrix();
-            mImageView.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            Rect imageBounds = mImageView.getDrawable().getBounds();
+            thumbnailView.setScaleType(ImageView.ScaleType.MATRIX);   //required
+            Rect imageBounds = thumbnailView.getDrawable().getBounds();
 
             switch(orientation)
             {
@@ -190,7 +204,7 @@ public class MainActivity extends ActionBarActivity
                     break;
             }
 
-            mImageView.setImageMatrix(matrix);
+            thumbnailView.setImageMatrix(matrix);
 
             sendPhoto();
         }
