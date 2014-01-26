@@ -38,7 +38,7 @@
         android:layout_gravity="center_horizontal|top"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginRight="-24dp" />
+        android:layout_marginRight="-68dp" />
 
     <ScrollView
     android:layout_height="fill_parent"
