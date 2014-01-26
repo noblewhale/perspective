@@ -497,7 +497,7 @@ public class MainActivity extends ActionBarActivity
                     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                     nameValuePairs.add(new BasicNameValuePair("name", list[0].name));
                     nameValuePairs.add(new BasicNameValuePair("imageID", imageViews.get((ImageView)view)));
-
+                    Log.e(TAG, imageViews.get((ImageView)view));
                     httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                     // Execute HTTP Post Request
