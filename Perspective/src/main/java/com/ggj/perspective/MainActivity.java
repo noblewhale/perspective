@@ -125,21 +125,25 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    BroadcastReceiver receiver;
+    BroadcastReceiver receiver, voteReceiver;
 
     @Override
     protected void onResume()
     {
         super.onResume();
         checkPlayServices();
+        voteReceiver = new VoteReceived();
         receiver = new UpdateImage();
+
         this.registerReceiver(receiver, new IntentFilter("UpdateImage"));
+        this.registerReceiver(voteReceiver, new IntentFilter(("VoteReceived")));
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
+        this.unregisterReceiver(voteReceiver);
         this.unregisterReceiver(receiver);
     }
 
