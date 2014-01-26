@@ -2,8 +2,10 @@ package com.ggj.perspective;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -119,6 +121,21 @@ public class MainActivity extends ActionBarActivity
     {
         super.onResume();
         checkPlayServices();
+        this.registerReceiver(new PowerStatusReceiver(), new IntentFilter("UpdateImage"));
+    }
+
+    private final class PowerStatusReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent.getAction().equals("UpdateImage"))
+            {
+                String url = intent.getStringExtra("url");
+                new DownloadImageTask((ImageView) findViewById(R.id.imageView2)).execute(url);
+                Log.e(TAG, url);
+            }
+        }
     }
 
     public void onTakePictureButtonPressed(View view)

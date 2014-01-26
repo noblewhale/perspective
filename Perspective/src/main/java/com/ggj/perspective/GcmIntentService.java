@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -53,7 +54,10 @@ public class GcmIntentService extends IntentService
             else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
             {
                 sendNotification( extras.getString("message") );
-                Log.e(TAG, extras.getString("path"));
+                Intent updateIntent = new Intent("UpdateImage");
+                updateIntent.putExtra("url", extras.getString("path"));
+                sendBroadcast(updateIntent);
+                //Log.e(TAG, extras.getString("path"));
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
