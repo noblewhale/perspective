@@ -53,6 +53,7 @@ public class GcmIntentService extends IntentService
             else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
             {
                 sendNotification( extras.getString("message") );
+                Log.e(TAG, extras.getString("path"));
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.

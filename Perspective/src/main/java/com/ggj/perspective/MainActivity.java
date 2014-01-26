@@ -338,13 +338,13 @@ public class MainActivity extends ActionBarActivity
                     // Execute HTTP Post Request
                     HttpResponse response = httpclient.execute(httppost);
 
+                    Log.e(TAG, response.toString());
+
                 } catch (ClientProtocolException e) {
                     // TODO Auto-generated catch block
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                 }
-
-                Log.e(TAG, parameters);
 
                 return "";
             }
