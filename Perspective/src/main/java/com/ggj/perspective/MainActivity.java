@@ -155,7 +155,8 @@ public class MainActivity extends ActionBarActivity
                 ImageView imageView = (ImageView) imageViews.keySet().toArray()[alreadyLoadedImageCount];
                 imageViews.put(imageView, imageID);
                 alreadyLoadedImageCount++;
-                new DownloadImageTask(imageView).execute(url);
+                Log.e(TAG, )
+                new DownloadImageTask(thumbnailView).execute(url);
                 Log.e(TAG, url);
             }
         }
@@ -340,6 +341,7 @@ public class MainActivity extends ActionBarActivity
                     storeRegistrationId(context, regid);
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
+                    Log.e(TAG, ex.getMessage());
                     mDisplay.append(msg + "\n");
                 }
                 return msg;
