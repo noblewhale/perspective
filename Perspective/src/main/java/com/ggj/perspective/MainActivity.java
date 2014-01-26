@@ -220,7 +220,7 @@ public class MainActivity extends ActionBarActivity
         {
             fullsizeImage = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
             fullsizeImage = Bitmap.createScaledBitmap(fullsizeImage, fullsizeImage.getWidth()/4, fullsizeImage.getHeight()/4, true);
-            Bitmap thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage,  300, 300);
+            Bitmap thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage,  280, 280);
 
             thumbnailView.setImageBitmap(thumbImage);
 
