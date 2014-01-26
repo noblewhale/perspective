@@ -125,21 +125,25 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    BroadcastReceiver receiver;
+    BroadcastReceiver receiver, voteReceiver;
 
     @Override
     protected void onResume()
     {
         super.onResume();
         checkPlayServices();
+        voteReceiver = new VoteReceived();
         receiver = new UpdateImage();
+
         this.registerReceiver(receiver, new IntentFilter("UpdateImage"));
+        this.registerReceiver(voteReceiver, new IntentFilter(("VoteReceived")));
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
+        this.unregisterReceiver(voteReceiver);
         this.unregisterReceiver(receiver);
     }
 
@@ -157,6 +161,19 @@ public class MainActivity extends ActionBarActivity
                 alreadyLoadedImageCount++;
                 new DownloadImageTask(imageView).execute(url);
                 Log.e(TAG, url);
+            }
+        }
+    }
+
+    private final class VoteReceived extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent.getAction().equals("VoteReceived"))
+            {
+                Log.e(TAG, intent.getStringExtra("imageID"));
+
             }
         }
     }
@@ -184,7 +201,7 @@ public class MainActivity extends ActionBarActivity
         if (requestCode == 1 && resultCode == RESULT_OK)
         {
             fullsizeImage = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-            fullsizeImage = Bitmap.createScaledBitmap(fullsizeImage, fullsizeImage.getWidth()/2, fullsizeImage.getHeight()/2, true);
+            fullsizeImage = Bitmap.createScaledBitmap(fullsizeImage, fullsizeImage.getWidth()/4, fullsizeImage.getHeight()/4, true);
             Bitmap thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage, 100, 100);
 
             thumbnailView.setImageBitmap(thumbImage);
@@ -327,6 +344,7 @@ public class MainActivity extends ActionBarActivity
                     storeRegistrationId(context, regid);
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
+                    Log.e(TAG, ex.getMessage());
                     mDisplay.append(msg + "\n");
                 }
                 return msg;
@@ -470,6 +488,50 @@ public class MainActivity extends ActionBarActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void clickToVote(final View view)
+    {
+
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] params) {
+                HttpURLConnection connection;
+                OutputStreamWriter request = null;
+
+                AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+                Account[] list = manager.getAccounts();
+
+
+                System.setProperty("http.keepAlive", "false");
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost("http://noblewhale.com/picit/saveVote.php");
+
+
+
+                try {
+
+                    // Add your data
+                    List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                    nameValuePairs.add(new BasicNameValuePair("name", list[0].name));
+                    nameValuePairs.add(new BasicNameValuePair("imageID", imageViews.get((ImageView)view)));
+                    Log.e(TAG, imageViews.get((ImageView)view));
+                    httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                    // Execute HTTP Post Request
+                    HttpResponse response = httpclient.execute(httppost);
+
+                    Log.e(TAG, response.toString());
+
+                } catch (ClientProtocolException e) {
+                    // TODO Auto-generated catch block
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                }
+
+                return "";
+            }
+        }.execute(null, null, null);
     }
 
 }
