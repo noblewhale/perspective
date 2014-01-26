@@ -161,6 +161,19 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    private final class VoteReceived extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (intent.getAction().equals("VoteReceived"))
+            {
+                Log.e(TAG, intent.getStringExtra("imageID"));
+
+            }
+        }
+    }
+
     public void onTakePictureButtonPressed(View view)
     {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
