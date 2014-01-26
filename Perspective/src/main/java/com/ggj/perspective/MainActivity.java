@@ -125,15 +125,25 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    BroadcastReceiver receiver;
+
     @Override
     protected void onResume()
     {
         super.onResume();
         checkPlayServices();
-        this.registerReceiver(new updateImage(), new IntentFilter("UpdateImage"));
+        receiver = new UpdateImage();
+        this.registerReceiver(receiver, new IntentFilter("UpdateImage"));
     }
 
-    private final class updateImage extends BroadcastReceiver
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        this.unregisterReceiver(receiver);
+    }
+
+    private final class UpdateImage extends BroadcastReceiver
     {
         @Override
         public void onReceive(Context context, Intent intent)
