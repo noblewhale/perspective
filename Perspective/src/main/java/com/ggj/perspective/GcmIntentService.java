@@ -54,9 +54,19 @@ public class GcmIntentService extends IntentService
             else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType))
             {
                 sendNotification( extras.getString("message") );
-                Intent updateIntent = new Intent("UpdateImage");
-                updateIntent.putExtra("url", extras.getString("path"));
-                sendBroadcast(updateIntent);
+                if(extras.containsKey("url"))
+                {
+                    Intent updateIntent = new Intent("UpdateImage");
+                    updateIntent.putExtra("url", extras.getString("path"));
+                    updateIntent.putExtra("imageID", extras.getString("imageID"));
+                    sendBroadcast(updateIntent);
+                }
+                else
+                {
+                    Intent updateIntent = new Intent("VoteReceived");
+                    updateIntent.putExtra("imageID", extras.getString("imageID"));
+                    sendBroadcast(updateIntent);
+                }
                 //Log.e(TAG, extras.getString("path"));
             }
         }

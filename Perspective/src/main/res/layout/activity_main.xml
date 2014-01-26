@@ -36,7 +36,8 @@
         android:minHeight="20dp"
         android:minWidth="20dp"
         android:layout_marginLeft="21dp"
-        android:onClick="clickToVote" />
+        android:onClick="clickToVote"
+        android:clickable="true" />
 
     <ImageView
         android:layout_width="71dp"
@@ -45,7 +46,9 @@
         android:layout_gravity="center_horizontal|bottom"
         android:minHeight="20dp"
         android:minWidth="20dp"
-        android:layout_marginLeft="21dp" />
+        android:layout_marginLeft="21dp"
+        android:clickable="true"
+        android:onClick="clickToVote" />
 
     <ImageView
         android:layout_width="71dp"
@@ -55,5 +58,48 @@
         android:minHeight="20dp"
         android:minWidth="20dp"
         android:layout_marginLeft="21dp" />
+
+    <ImageView
+        android:layout_width="71dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView5"
+        android:layout_gravity="right|bottom"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:layout_marginLeft="21dp"
+        android:onClick="clickToVote"
+        android:clickable="true" />
+
+    <ImageView
+        android:layout_width="71dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView6"
+        android:layout_gravity="right|bottom"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:layout_marginLeft="21dp"
+        android:onClick="clickToVote"
+        android:clickable="true" />
+
+    <ImageView
+        android:layout_width="71dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView7"
+        android:layout_gravity="right|bottom"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:layout_marginLeft="21dp"
+        android:clickable="true" />
+
+    <ImageView
+        android:layout_width="71dp"
+        android:layout_height="65dp"
+        android:id="@+id/imageView8"
+        android:layout_gravity="right|bottom"
+        android:minHeight="20dp"
+        android:minWidth="20dp"
+        android:layout_marginLeft="21dp"
+        android:onClick="clickToVote"
+        android:clickable="true" />
 
 </FrameLayout>
