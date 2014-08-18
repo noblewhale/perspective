@@ -218,7 +218,7 @@ public class MainActivity extends ActionBarActivity
     {
         if (requestCode == 1 && resultCode == RESULT_OK)
         {
-            fullsizeImage = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
+            fullsizeImage = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getPath() + "/temp85736583.jpg");
             fullsizeImage = Bitmap.createScaledBitmap(fullsizeImage, fullsizeImage.getWidth()/4, fullsizeImage.getHeight()/4, true);
             Bitmap thumbImage = ThumbnailUtils.extractThumbnail(fullsizeImage,  280, 280);
 
